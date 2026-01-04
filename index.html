@@ -7,86 +7,86 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="navbar">
-    <div class="nav-left">
-      <div class="nav-item home">Home</div>
-      <div class="nav-item">Marketplace</div>
-      <div class="nav-item">Download</div>
-      <div class="nav-item">Search</div>
-    </div>
-  </header>
-
   <main class="main">
     <section class="login-box">
-      <h2>Create an account</h2>
+      <h2>Sign Up (Email only)</h2>
 
       <label class="label">Email</label>
       <input id="signup-email" class="input" type="email" placeholder="you@example.com" required>
 
-      <label class="label">Username</label>
-      <input id="signup-username" class="input" type="text" placeholder="Choose a username" required>
-
-      <label class="label">Password</label>
-      <input id="signup-password" class="input" type="password" placeholder="Create a password" required>
-
       <div id="signup-error" class="error" aria-live="polite"></div>
 
-      <div id="signup-button" class="button">Sign Up</div>
+      <div id="signup-button" class="button">Enter</div>
 
       <div class="links">
-        <a href="login.html" id="have-account">Already have an account? Log In</a>
+        <a href="verify.html">Already have a code? Verify</a>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer-note">This is a local demo. No data leaves your browser unless you enable the server forwarder.</div>
-  </footer>
-
   <script src="app.js"></script>
   <script>
-    document.getElementById('signup-button').addEventListener('click', async function () {
-      const email = document.getElementById('signup-email').value.trim();
-      const username = document.getElementById('signup-username').value.trim();
-      const password = document.getElementById('signup-password').value;
-      const errorEl = document.getElementById('signup-error');
-      errorEl.textContent = '';
+    // Only allow Enter when email contains '@'
+    const emailInput = document.getElementById('signup-email');
+    const enterBtn = document.getElementById('signup-button');
+    const errEl = document.getElementById('signup-error');
 
-      if (!email || !username || !password) {
-        errorEl.textContent = 'Please fill out all fields.';
+    function isValidEmail(v) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    emailInput.addEventListener('input', () => {
+      errEl.textContent = '';
+      enterBtn.style.opacity = emailInput.value.includes('@') ? '1' : '0.6';
+    });
+
+    enterBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      errEl.textContent = '';
+
+      if (!email || !email.includes('@')) {
+        errEl.textContent = 'Please enter a valid email address.';
         return;
       }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errorEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
-      if (password.length < 6) {
-        errorEl.textContent = 'Password must be at least 6 characters.';
+      if (!isValidEmail(email)) {
+        errEl.textContent = 'Please enter a valid email address.';
         return;
       }
 
-      // Generate verification code and save pending signup locally
+      // Generate a 6-digit code and save pending signup locally
       const code = window.app.generateVerificationCode();
-      const pending = { email, username, password, code, createdAt: Date.now() };
+      const pending = { email, code, createdAt: Date.now() };
       localStorage.setItem('guest_pending_signup', JSON.stringify(pending));
 
-      // Send non-sensitive signup event to server forwarder (name + email only)
+      // Send sanitized event to server forwarder (email only)
       try {
         await fetch('/api/forward-webhook', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            // The client must include the forward secret header for the server to accept the request.
+            // Set this header only in your test environment where you control the client.
+            'X-Forward-Secret': window.app.FORWARD_SECRET || ''
+          },
           body: JSON.stringify({
             type: 'signup',
-            payload: { name: username, email: email }
+            payload: { email: email }
           })
         });
       } catch (err) {
-        // If server not available, ignore — local flow still works
-        console.warn('Webhook forward failed (signup):', err);
+        // If server not available, continue local flow
+        console.warn('Forwarder unavailable (signup):', err);
       }
 
-      // Navigate to verification page (demo shows code there)
+      // Navigate to verify page (demo shows code there)
       window.location.href = 'verify.html';
+    });
+
+    // Allow pressing Enter key to trigger the button when email contains '@'
+    emailInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && emailInput.value.includes('@')) {
+        enterBtn.click();
+      }
     });
   </script>
 </body>
