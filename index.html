@@ -226,9 +226,37 @@
     </form>
   </div>
 
-  <script>
+    <script>
     // Ambient dots
     for (let i = 0; i < 40; i++) {
       const dot = document.createElement('span');
       dot.className = 'dot';
-      dot
+      dot.style.left = Math.random() * 100 + '%';
+      dot.style.top = Math.random() * 100 + '%';
+      dot.style.animationDuration = (6 + Math.random() * 6) + 's';
+      document.querySelector('.particles').appendChild(dot);
+    }
+
+    // Ambient rings
+    for (let i = 0; i < 20; i++) {
+      const ring = document.createElement('span');
+      ring.className = 'ring';
+      ring.style.left = Math.random() * 100 + '%';
+      ring.style.top = Math.random() * 100 + '%';
+      ring.style.animationDuration = (4 + Math.random() * 4) + 's';
+      document.querySelector('.particles').appendChild(ring);
+    }
+
+    // Sparkles
+    for (let i = 0; i < 40; i++) {
+      const sparkle = document.createElement('span');
+      sparkle.style.left = Math.random() * 100 + '%';
+      sparkle.style.top = Math.random() * 100 + '%';
+      sparkle.style.animationDelay = (Math.random() * 3) + 's';
+      document.querySelector('.sparkles').appendChild(sparkle);
+    }
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
