@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Verify Email</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="nav-item home">Home</div>
+      <div class="nav-item">Marketplace</div>
+      <div class="nav-item">Download</div>
+      <div class="nav-item">Search</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="login-box">
+      <h2>Verify your email</h2>
+
+      <div id="verify-instructions" class="muted">Enter the 6-digit code we "sent" to your email.</div>
+
+      <label class="label">Verification Code</label>
+      <input id="verify-code" class="input" type="text" placeholder="123456" maxlength="6">
+
+      <div id="verify-error" class="error" aria-live="polite"></div>
+
+      <div id="verify-button" class="button">Verify</div>
+
+      <div class="links">
+        <a href="index.html">Back to Sign Up</a>
+        <a href="login.html">Log In</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-note">Demo verification stored locally</div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    // Show the code in the UI for demo purposes (so user can copy it)
+    const pendingJson = localStorage.getItem('guest_pending_signup');
+    if (pendingJson) {
+      const pending = JSON.parse(pendingJson);
+      document.getElementById('verify-instructions').textContent =
+        'Enter the 6-digit code we "sent" to ' + pending.email + '. (Demo code: ' + pending.code + ')';
+    } else {
+      document.getElementById('verify-instructions').textContent =
+        'No pending signup found. Go back to Sign Up.';
+    }
+
+    document.getElementById('verify-button').addEventListener('click', function () {
+      const codeInput = document.getElementById('verify-code').value.trim();
+      const err = document.getElementById('verify-error');
+      err.textContent = '';
+
+      const pendingJson = localStorage.getItem('guest_pending_signup');
+      if (!pendingJson) {
+        err.textContent = 'No pending signup found.';
+        return;
+      }
+      const pending = JSON.parse(pendingJson);
+      if (codeInput === pending.code) {
+        // Move pending to completed account (demo)
+        const account = { email: pending.email, username: pending.username, password: pending.password };
+        localStorage.setItem('guest_account', JSON.stringify(account));
+        localStorage.removeItem('guest_pending_signup');
+        err.style.color = '#1abc9c';
+        err.textContent = 'Email verified. Account created. You can now log in.';
+      } else {
+        err.textContent = 'Invalid code. Try again.';
+      }
+    });
+  </script>
+</body>
+</html>
