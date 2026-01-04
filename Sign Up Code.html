@@ -14,7 +14,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
     }
 
     .container {
@@ -30,7 +29,6 @@
       text-align: center;
       margin-bottom: 20px;
       font-weight: 600;
-      color: #f1f1f1;
     }
 
     input {
@@ -60,6 +58,13 @@
       background: #c0392b;
     }
 
+    .error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 10px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -70,8 +75,9 @@
   <div class="container">
     <h2>Enter Your Code</h2>
     <form id="form2">
-      <input type="text" id="Code" placeholder="Code" required>
+      <input type="text" id="Code" placeholder="6-digit Code" required>
       <button type="submit">Submit</button>
+      <div id="errorMsg" class="error"></div>
     </form>
   </div>
 
