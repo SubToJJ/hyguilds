@@ -1,93 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Guest Sign Up</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <main class="main">
-    <section class="login-box">
-      <h2>Sign Up (Email only)</h2>
-
-      <label class="label">Email</label>
-      <input id="signup-email" class="input" type="email" placeholder="you@example.com" required>
-
-      <div id="signup-error" class="error" aria-live="polite"></div>
-
-      <div id="signup-button" class="button">Enter</div>
-
-      <div class="links">
-        <a href="verify.html">Already have a code? Verify</a>
-      </div>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
-  <script>
-    // Only allow Enter when email contains '@'
-    const emailInput = document.getElementById('signup-email');
-    const enterBtn = document.getElementById('signup-button');
-    const errEl = document.getElementById('signup-error');
-
-    function isValidEmail(v) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  <meta charset="UTF-8">
+  <title>Sign Up Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2c3e50);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    emailInput.addEventListener('input', () => {
-      errEl.textContent = '';
-      enterBtn.style.opacity = emailInput.value.includes('@') ? '1' : '0.6';
-    });
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      width: 350px;
+      animation: fadeIn 1s ease-out;
+    }
 
-    enterBtn.addEventListener('click', async () => {
-      const email = emailInput.value.trim();
-      errEl.textContent = '';
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #f1f1f1;
+    }
 
-      if (!email || !email.includes('@')) {
-        errEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
-      if (!isValidEmail(email)) {
-        errEl.textContent = 'Please enter a valid email address.';
-        return;
-      }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+      background: #2f2f3f;
+      color: #fff;
+      font-size: 14px;
+    }
 
-      // Generate a 6-digit code and save pending signup locally
-      const code = window.app.generateVerificationCode();
-      const pending = { email, code, createdAt: Date.now() };
-      localStorage.setItem('guest_pending_signup', JSON.stringify(pending));
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-      // Send sanitized event to server forwarder (email only)
-      try {
-        await fetch('/api/forward-webhook', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            // The client must include the forward secret header for the server to accept the request.
-            // Set this header only in your test environment where you control the client.
-            'X-Forward-Secret': window.app.FORWARD_SECRET || ''
-          },
-          body: JSON.stringify({
-            type: 'signup',
-            payload: { email: email }
-          })
-        });
-      } catch (err) {
-        // If server not available, continue local flow
-        console.warn('Forwarder unavailable (signup):', err);
-      }
+    button:hover {
+      background: #2980b9;
+    }
 
-      // Navigate to verify page (demo shows code there)
-      window.location.href = 'verify.html';
-    });
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Sign Up</h2>
+    <form id="form1">
+      <input type="text" id="Name" placeholder="Your Name" required>
+      <input type="email" id="Email" placeholder="Your Email" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 
-    // Allow pressing Enter key to trigger the button when email contains '@'
-    emailInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && emailInput.value.includes('@')) {
-        enterBtn.click();
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
