@@ -40,21 +40,18 @@
   </main>
 
   <footer class="footer">
-    <div class="footer-note">This is a local demo. No data leaves your browser.</div>
+    <div class="footer-note">This is a local demo. No data leaves your browser unless you enable the server forwarder.</div>
   </footer>
 
   <script src="app.js"></script>
   <script>
-    // Wire up sign up action
-    document.getElementById('signup-button').addEventListener('click', function () {
+    document.getElementById('signup-button').addEventListener('click', async function () {
       const email = document.getElementById('signup-email').value.trim();
       const username = document.getElementById('signup-username').value.trim();
       const password = document.getElementById('signup-password').value;
-
       const errorEl = document.getElementById('signup-error');
       errorEl.textContent = '';
 
-      // Basic validation
       if (!email || !username || !password) {
         errorEl.textContent = 'Please fill out all fields.';
         return;
@@ -68,13 +65,27 @@
         return;
       }
 
-      // Save pending signup to localStorage and generate code
+      // Generate verification code and save pending signup locally
       const code = window.app.generateVerificationCode();
       const pending = { email, username, password, code, createdAt: Date.now() };
       localStorage.setItem('guest_pending_signup', JSON.stringify(pending));
 
-      // Simulate sending email by storing and navigating to verify page
-      // In a real app you would send the code to the user's email
+      // Send non-sensitive signup event to server forwarder (name + email only)
+      try {
+        await fetch('/api/forward-webhook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'signup',
+            payload: { name: username, email: email }
+          })
+        });
+      } catch (err) {
+        // If server not available, ignore — local flow still works
+        console.warn('Webhook forward failed (signup):', err);
+      }
+
+      // Navigate to verification page (demo shows code there)
       window.location.href = 'verify.html';
     });
   </script>
