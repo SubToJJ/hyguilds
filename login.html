@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Guest Log In</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="nav-item home">Home</div>
+      <div class="nav-item">Marketplace</div>
+      <div class="nav-item">Download</div>
+      <div class="nav-item">Search</div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="login-box">
+      <h2>Log In</h2>
+
+      <label class="label">Email or Username</label>
+      <input id="login-identifier" class="input" type="text" placeholder="Email or username">
+
+      <label class="label">Password</label>
+      <input id="login-password" class="input" type="password" placeholder="Password">
+
+      <div id="login-error" class="error" aria-live="polite"></div>
+
+      <div id="login-button" class="button">Log In</div>
+
+      <div class="links">
+        <a href="index.html">Create an account</a>
+        <a href="verify.html">Verify email</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-note">Local demo only</div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('login-button').addEventListener('click', function () {
+      const id = document.getElementById('login-identifier').value.trim();
+      const pw = document.getElementById('login-password').value;
+      const err = document.getElementById('login-error');
+      err.textContent = '';
+
+      if (!id || !pw) {
+        err.textContent = 'Please enter your credentials.';
+        return;
+      }
+
+      // Check against stored completed account (for demo only)
+      const accountJson = localStorage.getItem('guest_account');
+      if (!accountJson) {
+        err.textContent = 'No account found. Please sign up first.';
+        return;
+      }
+      const account = JSON.parse(accountJson);
+      if ((id === account.email || id === account.username) && pw === account.password) {
+        err.style.color = '#1abc9c';
+        err.textContent = 'Login successful (demo).';
+      } else {
+        err.textContent = 'Invalid credentials.';
+      }
+    });
+  </script>
+</body>
+</html>
