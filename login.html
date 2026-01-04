@@ -54,7 +54,6 @@
         return;
       }
 
-      // Check against stored completed account (for demo only)
       const accountJson = localStorage.getItem('guest_account');
       if (!accountJson) {
         err.textContent = 'No account found. Please sign up first.';
