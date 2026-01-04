@@ -103,12 +103,59 @@
       100% { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0); }
     }
 
-    .particles, .sparkles, .cube-bg {
+    .cube-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1800px;
+      height: 1800px;
+      perspective: 2000px;
+      z-index: 1;
+      opacity: 0;
+      animation: fadeCube 2s ease-out forwards;
+    }
+
+    @keyframes fadeCube {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: spinCube 120s linear infinite;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1abc9c, #2c3e50);
+      opacity: 0.1;
+      border-radius: 20px;
+    }
+
+    .cube-face.front  { transform: translateZ(900px); }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(900px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(900px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(900px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(900px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(900px); }
+
+    @keyframes spinCube {
+      0%   { transform: rotateX(0deg) rotateY(0deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    .particles, .sparkles {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
       overflow: hidden;
+      z-index: 2;
     }
 
     .particles span, .sparkles span {
@@ -117,11 +164,19 @@
       border-radius: 50%;
     }
 
-    .particles span {
+    .particles .dot {
       width: 8px;
       height: 8px;
       background: rgba(255,255,255,0.1);
       animation: float 12s linear infinite;
+    }
+
+    .particles .ring {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      animation: pulseRing 6s ease-in-out infinite;
     }
 
     .sparkles span {
@@ -136,38 +191,27 @@
       100% { transform: translateY(-100vh); opacity: 0; }
     }
 
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(0.8); opacity: 0.2; }
+      50% { transform: scale(1.2); opacity: 0.5; }
+    }
+
     @keyframes sparkle {
       0%, 100% { opacity: 0; transform: scale(0.5); }
       50% { opacity: 1; transform: scale(1.5); }
     }
-
-    .cube {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, #1abc9c, #2c3e50);
-      opacity: 0.1;
-      transform-style: preserve-3d;
-      animation: spinCube 60s linear infinite;
-      border-radius: 12px;
-      box-shadow: 0 0 60px rgba(26,188,156,0.2);
-    }
-
-    .cube1 { top: 10%; left: 15%; }
-    .cube2 { top: 50%; left: 70%; }
-    .cube3 { top: 80%; left: 30%; }
-
-    @keyframes spinCube {
-      0% { transform: rotateX(0deg) rotateY(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
   </style>
 </head>
 <body>
-  <div class="cube-bg">
-    <div class="cube cube1"></div>
-    <div class="cube cube2"></div>
-    <div class="cube cube3"></div>
+  <div class="cube-wrapper">
+    <div class="cube">
+      <div class="cube-face front"></div>
+      <div class="cube-face back"></div>
+      <div class="cube-face right"></div>
+      <div class="cube-face left"></div>
+      <div class="cube-face top"></div>
+      <div class="cube-face bottom"></div>
+    </div>
   </div>
 
   <div class="particles"></div>
@@ -183,25 +227,8 @@
   </div>
 
   <script>
-    // Generate particles
-    for (let i = 0; i < 60; i++) {
-      const p = document.createElement('span');
-      p.style.left = Math.random() * 100 + '%';
-      p.style.top = Math.random() * 100 + '%';
-      p.style.animationDuration = (6 + Math.random() * 6) + 's';
-      document.querySelector('.particles').appendChild(p);
-    }
-
-    // Generate sparkles
+    // Ambient dots
     for (let i = 0; i < 40; i++) {
-      const s = document.createElement('span');
-      s.style.left = Math.random() * 100 + '%';
-      s.style.top = Math.random() * 100 + '%';
-      s.style.animationDelay = (Math.random() * 3) + 's';
-      document.querySelector('.sparkles').appendChild(s);
-    }
-  </script>
-
-  <script src="script.js"></script>
-</body>
-</html>
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot
