@@ -1,0 +1,14 @@
+:root{--bg:#1c1c1c;--panel:#222;--muted:#888;--accent:#1abc9c}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:#fff}
+.navbar{display:flex;padding:20px 40px;background:#111}
+.nav-left{display:flex;gap:24px}
+.nav-item{color:var(--muted);font-weight:600;text-decoration:line-through;cursor:default}
+.nav-item.home{color:#fff;text-decoration:none}
+.main{display:flex;align-items:center;justify-content:center;min-height:70vh}
+.login-box{background:var(--panel);padding:40px;border-radius:12px;max-width:420px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.login-box h1{text-align:center;margin:0 0 24px;font-size:1.6rem}
+.static-field{background:#333;padding:14px;border-radius:8px;color:var(--muted);margin-bottom:16px}
+.static-button{background:#444;padding:14px;border-radius:8px;color:#aaa;text-align:center;font-weight:700}
+.links{display:flex;justify-content:center;gap:16px;margin-top:18px;color:#666}
+.footer{padding:20px;text-align:center;color:#666}
