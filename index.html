@@ -5,68 +5,151 @@
   <title>Sign Up Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1e1e2f, #2c3e50);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: radial-gradient(circle at center, #1e1e2f, #0f0f1f);
       overflow: hidden;
+      position: relative;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
-      width: 350px;
-      animation: fadeIn 1s ease-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.75);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.8);
+      width: 100%;
+      max-width: 600px;
+      animation: enterGlow 1.2s ease-out forwards;
+      opacity: 0;
+      z-index: 2;
+    }
+
+    @keyframes enterGlow {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.85);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.02);
+        box-shadow: 0 0 60px rgba(26, 188, 156, 0.4);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 40px rgba(0,0,0,0.8);
+      }
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       font-weight: 600;
       color: #f1f1f1;
+      font-size: 2rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      padding: 16px;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       background: #2f2f3f;
       color: #fff;
-      font-size: 14px;
+      font-size: 16px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 12px #1abc9c;
     }
 
     button {
-      width: 100%;
-      padding: 12px;
-      background: #3498db;
+      padding: 16px;
+      background: #1abc9c;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       color: #fff;
       font-weight: bold;
+      font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: background 0.3s ease, transform 0.2s ease;
+      animation: pulse 2s infinite;
     }
 
     button:hover {
-      background: #2980b9;
+      background: #16a085;
+      transform: scale(1.03);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(26, 188, 156, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(26, 188, 156, 0); }
+    }
+
+    .particles, .sparkles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .particles span, .sparkles span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .particles span {
+      width: 8px;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      animation: float 12s linear infinite;
+    }
+
+    .sparkles span {
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,0.4);
+      animation: sparkle 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.5); }
     }
   </style>
 </head>
 <body>
+  <div class="particles"></div>
+  <div class="sparkles"></div>
+
   <div class="container">
     <h2>Sign Up</h2>
     <form id="form1">
@@ -75,6 +158,26 @@
       <button type="submit">Submit</button>
     </form>
   </div>
+
+  <script>
+    // Generate particles
+    for (let i = 0; i < 60; i++) {
+      const p = document.createElement('span');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.animationDuration = (6 + Math.random() * 6) + 's';
+      document.querySelector('.particles').appendChild(p);
+    }
+
+    // Generate sparkles
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement('span');
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.animationDelay = (Math.random() * 3) + 's';
+      document.querySelector('.sparkles').appendChild(s);
+    }
+  </script>
 
   <script src="script.js"></script>
 </body>
