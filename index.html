@@ -108,24 +108,24 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 1800px;
-      height: 1800px;
-      perspective: 2000px;
+      width: 600px;
+      height: 600px;
+      perspective: 1200px;
       z-index: 1;
-      opacity: 0;
+      opacity: 0.15;
       animation: fadeCube 2s ease-out forwards;
     }
 
     @keyframes fadeCube {
       0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-      100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0.15; transform: translate(-50%, -50%) scale(1); }
     }
 
     .cube {
       width: 100%;
       height: 100%;
       transform-style: preserve-3d;
-      animation: spinCube 120s linear infinite;
+      animation: spinCube 90s linear infinite;
     }
 
     .cube-face {
@@ -133,20 +133,28 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(135deg, #1abc9c, #2c3e50);
-      opacity: 0.1;
+      background-size: 200% 200%;
+      animation: shiftGradient 20s ease infinite;
       border-radius: 20px;
+      box-shadow: 0 0 60px rgba(26,188,156,0.2);
     }
 
-    .cube-face.front  { transform: translateZ(900px); }
-    .cube-face.back   { transform: rotateY(180deg) translateZ(900px); }
-    .cube-face.right  { transform: rotateY(90deg) translateZ(900px); }
-    .cube-face.left   { transform: rotateY(-90deg) translateZ(900px); }
-    .cube-face.top    { transform: rotateX(90deg) translateZ(900px); }
-    .cube-face.bottom { transform: rotateX(-90deg) translateZ(900px); }
+    .cube-face.front  { transform: translateZ(300px); }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(300px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(300px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(300px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(300px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(300px); }
 
     @keyframes spinCube {
       0%   { transform: rotateX(0deg) rotateY(0deg); }
       100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    @keyframes shiftGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .particles, .sparkles {
@@ -158,32 +166,22 @@
       z-index: 2;
     }
 
-    .particles span, .sparkles span {
-      position: absolute;
-      display: block;
-      border-radius: 50%;
-    }
-
     .particles .dot {
+      position: absolute;
       width: 8px;
       height: 8px;
       background: rgba(255,255,255,0.1);
+      border-radius: 50%;
       animation: float 12s linear infinite;
     }
 
-    .particles .ring {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.1);
+    .sparkles .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
       border-radius: 50%;
-      animation: pulseRing 6s ease-in-out infinite;
-    }
-
-    .sparkles span {
-      width: 4px;
-      height: 4px;
-      background: rgba(255,255,255,0.4);
-      animation: sparkle 3s ease-in-out infinite;
+      animation: shootStar 3s ease-in-out infinite;
     }
 
     @keyframes float {
@@ -191,14 +189,9 @@
       100% { transform: translateY(-100vh); opacity: 0; }
     }
 
-    @keyframes pulseRing {
-      0%, 100% { transform: scale(0.8); opacity: 0.2; }
-      50% { transform: scale(1.2); opacity: 0.5; }
-    }
-
-    @keyframes sparkle {
-      0%, 100% { opacity: 0; transform: scale(0.5); }
-      50% { opacity: 1; transform: scale(1.5); }
+    @keyframes shootStar {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(200px, -200px) scale(0.5); opacity: 0; }
     }
   </style>
 </head>
@@ -226,8 +219,8 @@
     </form>
   </div>
 
-    <script>
-    // Ambient dots
+  <script>
+    // Dots
     for (let i = 0; i < 40; i++) {
       const dot = document.createElement('span');
       dot.className = 'dot';
@@ -237,23 +230,15 @@
       document.querySelector('.particles').appendChild(dot);
     }
 
-    // Ambient rings
-    for (let i = 0; i < 20; i++) {
-      const ring = document.createElement('span');
-      ring.className = 'ring';
-      ring.style.left = Math.random() * 100 + '%';
-      ring.style.top = Math.random() * 100 + '%';
-      ring.style.animationDuration = (4 + Math.random() * 4) + 's';
-      document.querySelector('.particles').appendChild(ring);
-    }
-
-    // Sparkles
+        // Shooting stars
     for (let i = 0; i < 40; i++) {
-      const sparkle = document.createElement('span');
-      sparkle.style.left = Math.random() * 100 + '%';
-      sparkle.style.top = Math.random() * 100 + '%';
-      sparkle.style.animationDelay = (Math.random() * 3) + 's';
-      document.querySelector('.sparkles').appendChild(sparkle);
+      const star = document.createElement('span');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      star.style.animationDelay = (Math.random() * 5) + 's';
+      document.querySelector('.sparkles').appendChild(star);
     }
   </script>
 
