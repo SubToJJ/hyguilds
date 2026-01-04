@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Error</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(-45deg, #3b0f0f, #5c1a1a, #7f2b2b, #a94444);
+      background-size: 400% 400%;
+      animation: gradientShift 30s ease infinite;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .particles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .particles .dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      animation: float 12s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    .box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.75);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      text-align: center;
+      animation: enterGlow 1.2s ease-out;
+      z-index: 2;
+    }
+
+    @keyframes enterGlow {
+      0% {
+        transform: translate(-50%, -50%) scale(0.85);
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.02);
+        box-shadow: 0 0 60px rgba(231, 76, 60, 0.4);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 30px rgba(0,0,0,0.6);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #e74c3c;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles"></div>
+
+  <div class="box">
+    <h1>Something went wrong</h1>
+    <p>Please try again or contact support.</p>
+  </div>
+
+  <script>
+    // Particles
+    for (let i = 0; i < 40; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.style.left = Math.random() * 100 + '%';
+      dot.style.top = Math.random() * 100 + '%';
+      dot.style.animationDuration = (6 + Math.random() * 6) + 's';
+      document.querySelector('.particles').appendChild(dot);
+    }
+  </script>
+</body>
+</html>
